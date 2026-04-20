@@ -193,6 +193,7 @@ function App() {
     event.preventDefault()
     const value = nameInput.trim()
     if (!value) {
+      window.alert('プレイヤー名を入力してください。')
       return
     }
     setPlayerName(value)
@@ -276,7 +277,12 @@ function App() {
                   />
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 font-semibold text-black hover:bg-emerald-400"
+                    disabled={!nameInput.trim()}
+                    className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 font-semibold transition-colors ${
+                      nameInput.trim()
+                        ? 'bg-emerald-500 text-black hover:bg-emerald-400'
+                        : 'cursor-not-allowed bg-slate-600 text-slate-300 opacity-60'
+                    }`}
                   >
                     認証して出発 <ChevronRight className="h-4 w-4" />
                   </button>
@@ -296,10 +302,6 @@ function App() {
         </section>
       </main>
     )
-  }
-
-  if (!puzzle) {
-    return null
   }
 
   if (screen === 'map') {
@@ -335,8 +337,14 @@ function App() {
           </p>
 
           <button
-            onClick={() => setScreen('play')}
-            className="inline-flex items-center gap-2 rounded-xl bg-amber-900 px-5 py-3 font-semibold text-amber-50 hover:bg-amber-800"
+            onClick={() => {
+              setCurrentIndex(0)
+              setAnswerInput('')
+              setFeedback('')
+              setShowHint(false)
+              setScreen('play')
+            }}
+            className="inline-flex items-center gap-2 rounded-xl bg-amber-900 px-6 py-3 text-base font-bold text-amber-50 shadow-md transition-colors hover:bg-amber-800"
           >
             最初の謎へ進む <ChevronRight className="h-4 w-4" />
           </button>
@@ -432,62 +440,83 @@ function App() {
     )
   }
 
-  return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,#f8edd2,#ead7ad_40%,#d0b98a)] p-6 text-amber-950">
-      <section className={`mx-auto w-full max-w-4xl rounded-3xl border-2 border-amber-900/30 bg-gradient-to-br ${puzzle.color} p-6 shadow-xl md:p-10`}>
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold">{puzzle.zone}</p>
-          <p className="rounded-full border border-amber-900/20 bg-white/70 px-3 py-1 text-xs font-semibold">
-            問題 {puzzle.id} / 10
-          </p>
-        </div>
+  if (screen === 'play') {
+    if (!puzzle) {
+      return (
+        <main className="min-h-screen bg-[radial-gradient(circle_at_top,#f8edd2,#ead7ad_40%,#d0b98a)] p-6 text-amber-950">
+          <section className="mx-auto w-full max-w-4xl rounded-3xl border-2 border-rose-900/30 bg-rose-50/80 p-6 shadow-xl md:p-10">
+            <h1 className="text-2xl font-bold text-rose-900">問題データの読み込みに失敗しました</h1>
+            <p className="mt-2 text-sm text-rose-900/80">マップに戻って再度「最初の謎へ進む」を押してください。</p>
+            <button
+              onClick={() => setScreen('map')}
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-900 px-4 py-2 font-semibold text-amber-50 hover:bg-amber-800"
+            >
+              マップへ戻る <ChevronRight className="h-4 w-4" />
+            </button>
+          </section>
+        </main>
+      )
+    }
 
-        <h1 className="mb-2 text-3xl font-bold md:text-4xl">{puzzle.title}</h1>
-        <p className="mb-6 leading-relaxed">{puzzle.description}</p>
-
-        <form onSubmit={submitAnswer} className="space-y-3">
-          <input
-            value={answerInput}
-            onChange={(event) => setAnswerInput(event.target.value)}
-            className="w-full rounded-xl border border-amber-900/30 bg-white/80 p-3 outline-none focus:border-amber-700"
-            placeholder="答えを入力してください"
-          />
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="submit"
-              className="inline-flex items-center gap-2 rounded-xl bg-amber-900 px-4 py-2 font-semibold text-amber-50 hover:bg-amber-800"
-            >
-              回答する <ChevronRight className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowHint((prev) => !prev)}
-              className="inline-flex items-center gap-2 rounded-xl border border-amber-900/30 bg-white/70 px-4 py-2 font-semibold"
-            >
-              <HelpCircle className="h-4 w-4" /> ヒント
-            </button>
-            <button
-              type="button"
-              onClick={() => setScreen('ar')}
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-800/30 bg-emerald-100 px-4 py-2 font-semibold"
-            >
-              <Camera className="h-4 w-4" /> ARスキャナー
-            </button>
+    return (
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top,#f8edd2,#ead7ad_40%,#d0b98a)] p-6 text-amber-950">
+        <section className={`mx-auto w-full max-w-4xl rounded-3xl border-2 border-amber-900/30 bg-gradient-to-br ${puzzle.color} p-6 shadow-xl md:p-10`}>
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold">{puzzle.zone}</p>
+            <p className="rounded-full border border-amber-900/20 bg-white/70 px-3 py-1 text-xs font-semibold">
+              問題 {puzzle.id} / 10
+            </p>
           </div>
-        </form>
 
-        {showHint && (
-          <p className="mt-4 rounded-xl border border-amber-900/20 bg-white/60 p-3 text-sm">
-            ヒント: {puzzle.hint}
-          </p>
-        )}
+          <h1 className="mb-2 text-3xl font-bold md:text-4xl">{puzzle.title}</h1>
+          <p className="mb-6 leading-relaxed">{puzzle.description}</p>
 
-        {feedback && (
-          <p className="mt-4 rounded-xl border border-amber-900/20 bg-white/60 p-3 text-sm">{feedback}</p>
-        )}
-      </section>
-    </main>
-  )
+          <form onSubmit={submitAnswer} className="space-y-3">
+            <input
+              value={answerInput}
+              onChange={(event) => setAnswerInput(event.target.value)}
+              className="w-full rounded-xl border border-amber-900/30 bg-white/80 p-3 outline-none focus:border-amber-700"
+              placeholder="答えを入力してください"
+            />
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="submit"
+                className="inline-flex items-center gap-2 rounded-xl bg-amber-900 px-4 py-2 font-semibold text-amber-50 hover:bg-amber-800"
+              >
+                回答する <ChevronRight className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowHint((prev) => !prev)}
+                className="inline-flex items-center gap-2 rounded-xl border border-amber-900/30 bg-white/70 px-4 py-2 font-semibold"
+              >
+                <HelpCircle className="h-4 w-4" /> ヒント
+              </button>
+              <button
+                type="button"
+                onClick={() => setScreen('ar')}
+                className="inline-flex items-center gap-2 rounded-xl border border-emerald-800/30 bg-emerald-100 px-4 py-2 font-semibold"
+              >
+                <Camera className="h-4 w-4" /> ARスキャナー
+              </button>
+            </div>
+          </form>
+
+          {showHint && (
+            <p className="mt-4 rounded-xl border border-amber-900/20 bg-white/60 p-3 text-sm">
+              ヒント: {puzzle.hint}
+            </p>
+          )}
+
+          {feedback && (
+            <p className="mt-4 rounded-xl border border-amber-900/20 bg-white/60 p-3 text-sm">{feedback}</p>
+          )}
+        </section>
+      </main>
+    )
+  }
+
+  return null
 }
 
 export default App
