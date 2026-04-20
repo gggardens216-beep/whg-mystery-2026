@@ -114,12 +114,11 @@ const PUZZLES = [
     description:
       '全ての欠片が集まった。時を動かす最後の鍵、それはこの冒険を始めた『あなたの名前』だ。入力して封印を解け。',
     hint: 'ゲームの最初に登録した名前を正確に入力して。全角・半角の違いは自動で修正されるよ。',
-    answer: 'USER_NAME',
+    answer: PLAYER_NAME_TOKEN,
     color: 'text-red-600 border-red-200',
   },
 ]
 
-const puzzles = PUZZLES
 const zones = [
   'Zone A: 吉田観賞魚',
   'Zone B: GGガーデンズ',
@@ -142,7 +141,7 @@ function App() {
   const [showHint, setShowHint] = useState(false)
   const [feedback, setFeedback] = useState('')
 
-  const puzzle = puzzles[currentIndex]
+  const puzzle = PUZZLES[currentIndex]
 
   const nextPrologue = () => {
     if (prologueStep < 2) {
