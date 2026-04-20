@@ -124,16 +124,19 @@ const zones = [
   'Zone C: Gardens Marché',
   'Zone D: Au coju',
   '最終地点: 水の丘',
-  '2046年からの通信',
 ]
 const ZONE_COORDS = {
-  'Zone A: 吉田観賞魚': { top: '30%', left: '30%' },
-  'Zone B: GGガーデンズ': { top: '30%', left: '70%' },
+  'Zone A: 吉田観賞魚': { top: '30%', left: '25%' },
+  'Zone B: GGガーデンズ': { top: '20%', left: '65%' },
   'Zone C: Gardens Marché': { top: '70%', left: '70%' },
-  'Zone D: Au coju': { top: '70%', left: '30%' },
+  'Zone D: Au coju': { top: '70%', left: '25%' },
   '最終地点: 水の丘': { top: '50%', left: '50%' },
-  '2046年からの通信': { top: '14%', left: '50%' },
 }
+const ENTRANCE_COORDS = [
+  { top: '10%', left: '22%' },
+  { top: '10%', left: '50%' },
+  { top: '10%', left: '78%' },
+]
 const DECLINE_MESSAGE = '通信を終了すると特典を受け取れません。'
 
 const normalize = (value) => value.normalize('NFKC').trim().replace(/\s+/g, '').toLowerCase()
@@ -271,14 +274,14 @@ function App() {
   }
 
   if (screen === 'map') {
-    const currentZone = puzzle.zone
+    const currentZone = puzzle.zone === '2046年からの通信' ? '最終地点: 水の丘' : puzzle.zone
     const isZoneCompleted = (zone) => {
       const completeThresholdByZone = {
         'Zone A: 吉田観賞魚': 2,
         'Zone B: GGガーデンズ': 4,
         'Zone C: Gardens Marché': 6,
         'Zone D: Au coju': 8,
-        '最終地点: 水の丘': 9,
+        '最終地点: 水の丘': 10,
       }
 
       const threshold = completeThresholdByZone[zone]
@@ -302,10 +305,12 @@ function App() {
           <section className="bg-black/50 p-4 text-white backdrop-blur-sm">
             <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3">
               <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
-                <Map className="h-7 w-7" /> 水の丘の探索地図
+                <Map className="h-7 w-7" /> Water Hill Garden
               </h1>
-              <p className="rounded-full border border-white/30 bg-black/30 px-4 py-1 text-sm font-semibold">
-                プレイヤー: {playerName} / 進行度: {currentIndex + 1} / 10
+              <p className="rounded-full border border-white/30 bg-black/30 px-4 py-1 text-sm font-semibold leading-relaxed">
+                プレイヤー: {playerName}
+                <br />
+                進行度: {currentIndex + 1} / 10
               </p>
             </div>
           </section>
@@ -313,10 +318,20 @@ function App() {
           <section className="bg-black/30 p-4 text-center text-white">
             <p className="text-sm font-semibold text-amber-100">次の目的地</p>
             <h2 className="mt-1 text-3xl font-extrabold md:text-4xl">{puzzle.zone}</h2>
+            <p className="mt-1 text-xs text-amber-100/90">問題 {puzzle.id} / 10</p>
           </section>
 
           <div className="relative mx-auto w-full max-w-5xl flex-1 p-4">
             <div className="relative min-h-[420px] rounded-2xl border border-amber-100/50 bg-black/10">
+              {ENTRANCE_COORDS.map((coords, index) => (
+                <div
+                  key={`entrance-${index}`}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 rounded bg-black/45 px-2 py-1 text-[10px] font-bold tracking-wide text-white/90 md:text-xs"
+                  style={{ top: coords.top, left: coords.left }}
+                >
+                  ENTRANCE
+                </div>
+              ))}
               {zones
                 .filter((zone) => ZONE_COORDS[zone])
                 .map((zone) => {
@@ -338,9 +353,9 @@ function App() {
                           </p>
                         </div>
                       ) : (
-                        <div className={`opacity-90 ${isCompleted ? 'text-emerald-200' : 'text-gray-300'}`}>
+                        <div className={`text-xs font-semibold ${isCompleted ? 'text-green-600 opacity-70' : 'text-gray-400 opacity-50'}`}>
                           <p className="text-lg">{isCompleted ? '✅' : '•'}</p>
-                          <p className="rounded bg-black/35 px-2 py-1 text-[11px] font-semibold md:text-xs">
+                          <p className="rounded bg-white/70 px-2 py-1 text-[11px] md:text-xs">
                             {zone}
                           </p>
                         </div>
@@ -351,7 +366,7 @@ function App() {
             </div>
           </div>
 
-          <div className="mt-auto bg-black/55 p-4 backdrop-blur-sm">
+          <div className="sticky bottom-0 mt-auto bg-black/55 p-4 backdrop-blur-sm">
             <div className="mx-auto w-full max-w-5xl">
               <p className="mb-3 flex items-center gap-2 text-sm text-white/90">
                 <CheckCircle className="h-4 w-4" />
