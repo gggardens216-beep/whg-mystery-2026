@@ -17,6 +17,8 @@ import {
   Fingerprint,
 } from 'lucide-react'
 
+const PLAYER_NAME_TOKEN = '__PLAYER_NAME__'
+
 const puzzles = [
   {
     id: 1,
@@ -105,12 +107,13 @@ const puzzles = [
     title: '未来認証キー',
     description: '未来のあなたを認証せよ。入力すべき答えは？',
     hint: 'プロローグで登録した名前。',
-    answer: '',
+    answer: PLAYER_NAME_TOKEN,
     color: 'from-emerald-100 to-cyan-50',
   },
 ]
 
 const zones = ['吉田観賞魚', 'GGガーデンズ', 'マルシェ', 'Au coju', '最終地点']
+const DECLINE_MESSAGE = '通信を終了すると特典を受け取れません。'
 
 const normalize = (value) => value.trim().toLowerCase()
 
@@ -159,8 +162,16 @@ function App() {
           videoRef.current.srcObject = stream
         }
       })
-      .catch(() => {
-        setScannerError('カメラへアクセスできませんでした。権限を許可して再試行してください。')
+      .catch((error) => {
+        if (error?.name === 'NotAllowedError') {
+          setScannerError('カメラ権限が拒否されました。ブラウザ設定から許可して再試行してください。')
+          return
+        }
+        if (error?.name === 'NotFoundError') {
+          setScannerError('利用可能なカメラが見つかりませんでした。別の端末でお試しください。')
+          return
+        }
+        setScannerError('カメラへアクセスできませんでした。権限と端末状態を確認して再試行してください。')
       })
 
     return () => {
@@ -191,7 +202,8 @@ function App() {
   const submitAnswer = (event) => {
     event.preventDefault()
     const entered = normalize(answerInput)
-    const expected = puzzle.id === 10 ? normalize(playerName) : normalize(puzzle.answer)
+    const expected =
+      puzzle.answer === PLAYER_NAME_TOKEN ? normalize(playerName) : normalize(puzzle.answer)
 
     if (entered && entered === expected) {
       setFeedback('認証成功。次のログへ進みます。')
@@ -286,6 +298,10 @@ function App() {
     )
   }
 
+  if (!puzzle) {
+    return null
+  }
+
   if (screen === 'map') {
     return (
       <main className="min-h-screen bg-[radial-gradient(circle_at_top,#f8edd2,#ead7ad_40%,#d0b98a)] p-6 text-amber-950">
@@ -374,7 +390,7 @@ function App() {
               <PhoneIncoming className="h-5 w-5" />
             </button>
             <button
-              onClick={() => setFeedback('通信を終了すると特典を受け取れません。')}
+              onClick={() => setFeedback(DECLINE_MESSAGE)}
               className="rounded-full bg-rose-500 p-4 text-white hover:bg-rose-400"
               aria-label="着信を拒否"
             >
