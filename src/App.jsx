@@ -275,6 +275,7 @@ function App() {
 
   if (screen === 'map') {
     const currentZone = puzzle.zone === '2046年からの通信' ? '最終地点: 水の丘' : puzzle.zone
+    const mapBackgroundUrl = `${import.meta.env.BASE_URL}bg-map.png`
     const isZoneCompleted = (zone) => {
       const completeThresholdByZone = {
         'Zone A: 吉田観賞魚': 2,
@@ -289,17 +290,23 @@ function App() {
     }
 
     return (
-      <main className="relative min-h-screen overflow-hidden text-amber-950">
+      <main
+        className="relative min-h-screen w-full overflow-hidden text-amber-950"
+        style={{
+          backgroundImage: `url('${mapBackgroundUrl}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+        }}
+      >
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: "url('/bg-map.png')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'sepia(0.6) brightness(0.9)',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            mixBlendMode: 'multiply',
           }}
         />
-        <div className="absolute inset-0 bg-black/25" />
 
         <div className="relative z-10 flex min-h-screen flex-col">
           <section className="bg-black/50 p-4 text-white backdrop-blur-sm">
