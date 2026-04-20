@@ -134,6 +134,13 @@ const ZONE_COORDS = {
   '最終地点: 水の丘': { top: '50%', left: '50%' },
   '2046年からの通信': { top: '14%', left: '50%' },
 }
+const MAP_BACKGROUND_IMAGE_PATH = '/bg-map.png'
+const ZONE_COMPLETION_THRESHOLD = PUZZLES.reduce((thresholds, puzzle, index) => {
+  if (ZONE_COORDS[puzzle.zone]) {
+    thresholds[puzzle.zone] = index + 1
+  }
+  return thresholds
+}, {})
 const DECLINE_MESSAGE = '通信を終了すると特典を受け取れません。'
 
 const normalize = (value) => value.normalize('NFKC').trim().replace(/\s+/g, '').toLowerCase()
@@ -272,25 +279,14 @@ function App() {
 
   if (screen === 'map') {
     const currentZone = puzzle.zone
-    const isZoneCompleted = (zone) => {
-      const completeThresholdByZone = {
-        'Zone A: 吉田観賞魚': 2,
-        'Zone B: GGガーデンズ': 4,
-        'Zone C: Gardens Marché': 6,
-        'Zone D: Au coju': 8,
-        '最終地点: 水の丘': 9,
-      }
-
-      const threshold = completeThresholdByZone[zone]
-      return typeof threshold === 'number' && currentIndex >= threshold
-    }
+    const isZoneCompleted = (zone) => currentIndex >= ZONE_COMPLETION_THRESHOLD[zone]
 
     return (
       <main className="relative min-h-screen overflow-hidden text-amber-950">
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: "url('/bg-map.png')",
+            backgroundImage: `url('${MAP_BACKGROUND_IMAGE_PATH}')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             filter: 'sepia(0.6) brightness(0.9)',
@@ -317,37 +313,37 @@ function App() {
 
           <div className="relative mx-auto w-full max-w-5xl flex-1 p-4">
             <div className="relative min-h-[420px] rounded-2xl border border-amber-100/50 bg-black/10">
-              {zones
-                .filter((zone) => ZONE_COORDS[zone])
-                .map((zone) => {
-                  const isCurrent = zone === currentZone
-                  const isCompleted = !isCurrent && isZoneCompleted(zone)
-                  const coords = ZONE_COORDS[zone]
+              {zones.map((zone) => {
+                const isCurrent = zone === currentZone
+                const isCompleted = !isCurrent && isZoneCompleted(zone)
+                const coords = ZONE_COORDS[zone]
 
-                  return (
-                    <div
-                      key={zone}
-                      className="absolute -translate-x-1/2 -translate-y-1/2 text-center"
-                      style={{ top: coords.top, left: coords.left }}
-                    >
-                      {isCurrent ? (
-                        <div className="animate-bounce">
-                          <MapPin className="mx-auto h-9 w-9 text-red-500 drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]" />
-                          <p className="mt-1 rounded bg-white/80 px-2 py-1 text-xs font-bold text-red-700 md:text-sm">
-                            {zone}
-                          </p>
-                        </div>
-                      ) : (
-                        <div className={`opacity-90 ${isCompleted ? 'text-emerald-200' : 'text-gray-300'}`}>
-                          <p className="text-lg">{isCompleted ? '✅' : '•'}</p>
-                          <p className="rounded bg-black/35 px-2 py-1 text-[11px] font-semibold md:text-xs">
-                            {zone}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
+                return (
+                  <div
+                    key={zone}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 text-center"
+                    style={{ top: coords.top, left: coords.left }}
+                  >
+                    {isCurrent ? (
+                      <div className="animate-bounce">
+                        <MapPin className="mx-auto h-9 w-9 text-red-500 drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]" />
+                        <p className="mt-1 rounded bg-white/80 px-2 py-1 text-xs font-bold text-red-700 md:text-sm">
+                          {zone}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className={`opacity-90 ${isCompleted ? 'text-emerald-200' : 'text-gray-300'}`}>
+                        <p className="flex items-center justify-center text-lg">
+                          {isCompleted ? <CheckCircle className="h-5 w-5 text-emerald-300" /> : '•'}
+                        </p>
+                        <p className="rounded bg-black/35 px-2 py-1 text-[11px] font-semibold md:text-xs">
+                          {zone}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </div>
 
