@@ -307,7 +307,7 @@ function App() {
               <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
                 <Map className="h-7 w-7" /> Water Hill Garden
               </h1>
-              <div className="rounded-full border border-white/30 bg-black/30 px-4 py-1 text-sm font-semibold leading-relaxed">
+              <div className="rounded-xl border border-white/30 bg-black/30 px-4 py-1 text-sm font-semibold leading-relaxed">
                 <p>プレイヤー: {playerName}</p>
                 <p>進行度: {currentIndex + 1} / 10</p>
               </div>
