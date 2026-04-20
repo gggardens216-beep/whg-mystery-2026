@@ -16,102 +16,117 @@ import {
   Fingerprint,
 } from 'lucide-react'
 
-const PLAYER_NAME_TOKEN = '__PLAYER_NAME__'
+const PLAYER_NAME_TOKEN = 'USER_NAME'
 
-const puzzles = [
+const PUZZLES = [
   {
     id: 1,
-    zone: '吉田観賞魚',
-    title: '水面の導入コード',
-    description: '水槽に映る「1, 2, 3」の順番で見える漢字をつなげよ。',
-    hint: '水・丘・門 の順で読む。',
-    answer: 'みずのおかもん',
-    color: 'from-amber-100 to-yellow-50',
+    zone: 'Zone A: 吉田観賞魚',
+    title: '第一の鍵：創業の刻印',
+    description:
+      '吉田観賞魚の歴史を紐解こう。大正時代、初代・吉田定一が養殖場を開業した年は西暦何年？数字4桁で答えよ。',
+    hint: '歴史を示す古い看板や写真を探してみて。大正10年は西暦『1921』年だ。',
+    answer: '1921',
+    color: 'text-blue-600 border-blue-200',
   },
   {
     id: 2,
-    zone: '吉田観賞魚',
-    title: '鱗の暗号',
-    description: '青い札の裏面にある4文字を逆から読むと？',
-    hint: '逆読みで「ろぐ」。',
-    answer: 'ろぐ',
-    color: 'from-sky-100 to-cyan-50',
+    zone: 'Zone A: 吉田観賞魚',
+    title: '第二の鍵：泳ぐ宝石',
+    description:
+      '池の中で優雅に泳ぐ『錦鯉』。その中で、白地に赤い模様がある代表的な品種をカタカナ4文字で何と呼ぶ？',
+    hint: 'おめでたい色の組み合わせ。コから始まる4文字だよ。',
+    answer: 'コウハク',
+    color: 'text-blue-600 border-blue-200',
   },
   {
     id: 3,
-    zone: 'GGガーデンズ',
-    title: '芽吹きの座標',
-    description: '花壇番号「2-0-4-6」が示す花の頭文字を並べよ。',
-    hint: '未来年号と同じ数字。',
-    answer: 'みらい',
-    color: 'from-emerald-100 to-lime-50',
+    zone: 'Zone B: GGガーデンズ',
+    title: '第三の鍵：緑の迷宮',
+    description:
+      '温室へ進もう。植物に添えられた名札に注目。四つ葉のクローバーのマークがある名札の植物は何色？カタカナ3文字で答えよ。',
+    hint: '植物を象徴する色だよ。ミ・ド・リ。',
+    answer: 'ミドリ',
+    color: 'text-green-600 border-green-200',
   },
   {
     id: 4,
-    zone: 'GGガーデンズ',
-    title: '風の方位盤',
-    description: '北→東→南→西の順にある文字を拾うと？',
-    hint: '「ひ」「ほ」「う」で3文字。',
-    answer: 'ひほう',
-    color: 'from-green-100 to-emerald-50',
+    zone: 'Zone B: GGガーデンズ',
+    title: '第四の鍵：時の歯車',
+    description:
+      'アンティーク家具が並ぶエリアで、一番大きな時計を探せ。その時計の短針が『3』を指している時、その方向にある花の名前は？カタカナ2文字。',
+    hint: '愛の象徴とされる、トゲのある美しい花だよ。',
+    answer: 'バラ',
+    color: 'text-green-600 border-green-200',
   },
   {
     id: 5,
-    zone: 'マルシェ',
-    title: '市場の伝票',
-    description: '品名欄の赤字だけを読むと現れる言葉は？',
-    hint: '「とびら」に関係する。',
-    answer: 'かぎ',
-    color: 'from-orange-100 to-amber-50',
+    zone: 'Zone C: Gardens Marché',
+    title: '第五の鍵：大地のパレット',
+    description:
+      '地元八王子の恵みが集まるマルシェ。今日並んでいる野菜の中で、真っ赤で丸いサラダの定番野菜は？カタカナ3文字で答えよ。',
+    hint: 'トから始まる3文字の野菜だよ。',
+    answer: 'トマト',
+    color: 'text-yellow-600 border-yellow-200',
   },
   {
     id: 6,
-    zone: 'マルシェ',
-    title: '香りの順列',
-    description: 'ハーブの頭文字を A→Z 順に並べ替えよ。',
-    hint: '最初と最後は「ら」と「る」。',
-    answer: 'らべる',
-    color: 'from-rose-100 to-orange-50',
+    zone: 'Zone C: Gardens Marché',
+    title: '第六の鍵：黄金の収穫',
+    description: 'マルシェのロゴマークをよく見てみよう。何の形をモチーフにしている？漢字一文字で答えよ。',
+    hint: 'コーヒー〇〇、大豆、などと言う時の漢字だよ。',
+    answer: '豆',
+    color: 'text-yellow-600 border-yellow-200',
   },
   {
     id: 7,
-    zone: 'Au coju',
-    title: '温室の反響',
-    description: '壁の言葉「ミライノキオク」を2文字ずつ区切ると？',
-    hint: '最後の2文字に注目。',
-    answer: 'きおく',
-    color: 'from-indigo-100 to-blue-50',
+    zone: 'Zone D: Au coju',
+    title: '第七の鍵：休息の暗号',
+    description:
+      'レストラン『Au coju』へ。この名前の由来は、多摩の方言で「一休み」を意味する言葉。ひらがな4文字で何と読む？',
+    hint: 'そのまま『おこじゅ』と入力して。',
+    answer: 'おこじゅ',
+    color: 'text-purple-600 border-purple-200',
   },
   {
     id: 8,
-    zone: 'Au coju',
-    title: '夜明けの封印',
-    description: '暗号「4-1-2-1」を五十音表で読む。',
-    hint: '答えは「あさ」。',
-    answer: 'あさ',
-    color: 'from-violet-100 to-purple-50',
+    zone: 'Zone D: Au coju',
+    title: '第八の鍵：未来への椅子',
+    description:
+      'オコジュのメニューを開いて。一番最初に載っている、香り高い黒い飲み物は？カタカナ4文字で答えよ。',
+    hint: '眠気覚ましによく飲むアレだよ。',
+    answer: 'コーヒー',
+    color: 'text-purple-600 border-purple-200',
   },
   {
     id: 9,
-    zone: '最終ナビ',
-    title: '最後の道標',
-    description: '4つのゾーン名の頭文字を拾うと導かれる単語は？',
-    hint: '「よ・じ・ま・あ」ではなく、ローマ字頭文字。',
-    answer: 'ygma',
-    color: 'from-stone-100 to-zinc-50',
+    zone: '最終地点: 水の丘',
+    title: '第九の鍵：秘宝の封印',
+    description: 'ここまで集めた記憶をたどろう。この場所全体を『〇〇の丘』と呼ぶ。〇〇に入る漢字一文字は？',
+    hint: '水と緑に囲まれた場所。『Water』を日本語の漢字にして。',
+    answer: '水',
+    color: 'text-stone-600 border-stone-200',
   },
   {
     id: 10,
-    zone: '最終地点',
-    title: '未来認証キー',
-    description: '未来のあなたを認証せよ。入力すべき答えは？',
-    hint: 'プロローグで登録した名前。',
+    zone: '2046年からの通信',
+    title: '真実の鍵',
+    description:
+      '全ての欠片が集まった。時を動かす最後の鍵、それはこの冒険を始めた『あなたの名前』だ。入力して封印を解け。',
+    hint: 'ゲームの最初に登録した名前を正確に入力して。全角・半角の違いは自動で修正されるよ。',
     answer: PLAYER_NAME_TOKEN,
-    color: 'from-emerald-100 to-cyan-50',
+    color: 'text-red-600 border-red-200',
   },
 ]
 
-const zones = ['吉田観賞魚', 'GGガーデンズ', 'マルシェ', 'Au coju', '最終地点']
+const zones = [
+  'Zone A: 吉田観賞魚',
+  'Zone B: GGガーデンズ',
+  'Zone C: Gardens Marché',
+  'Zone D: Au coju',
+  '最終地点: 水の丘',
+  '2046年からの通信',
+]
 const DECLINE_MESSAGE = '通信を終了すると特典を受け取れません。'
 
 const normalize = (value) => value.normalize('NFKC').trim().replace(/\s+/g, '').toLowerCase()
@@ -126,7 +141,7 @@ function App() {
   const [showHint, setShowHint] = useState(false)
   const [feedback, setFeedback] = useState('')
 
-  const puzzle = puzzles[currentIndex]
+  const puzzle = PUZZLES[currentIndex]
 
   const nextPrologue = () => {
     if (prologueStep < 2) {
@@ -375,7 +390,7 @@ function App() {
   if (screen === 'play') {
     return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,#f8edd2,#ead7ad_40%,#d0b98a)] p-6 text-amber-950">
-      <section className={`mx-auto w-full max-w-4xl rounded-3xl border-2 border-amber-900/30 bg-gradient-to-br ${puzzle.color} p-6 shadow-xl md:p-10`}>
+      <section className={`mx-auto w-full max-w-4xl rounded-3xl border-2 bg-white/90 ${puzzle.color} p-6 shadow-xl md:p-10`}>
         <div className="mb-5 flex items-center justify-between gap-3">
           <p className="text-sm font-semibold">{puzzle.zone}</p>
           <p className="rounded-full border border-amber-900/20 bg-white/70 px-3 py-1 text-xs font-semibold">
