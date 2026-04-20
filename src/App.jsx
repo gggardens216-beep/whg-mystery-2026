@@ -7,7 +7,6 @@ import {
   PhoneIncoming,
   PhoneOff,
   Image,
-  Compass,
   Clock,
   MapPin,
   CheckCircle,
@@ -127,6 +126,14 @@ const zones = [
   '最終地点: 水の丘',
   '2046年からの通信',
 ]
+const ZONE_COORDS = {
+  'Zone A: 吉田観賞魚': { top: '30%', left: '30%' },
+  'Zone B: GGガーデンズ': { top: '30%', left: '70%' },
+  'Zone C: Gardens Marché': { top: '70%', left: '70%' },
+  'Zone D: Au coju': { top: '70%', left: '30%' },
+  '最終地点: 水の丘': { top: '50%', left: '50%' },
+  '2046年からの通信': { top: '14%', left: '50%' },
+}
 const DECLINE_MESSAGE = '通信を終了すると特典を受け取れません。'
 
 const normalize = (value) => value.normalize('NFKC').trim().replace(/\s+/g, '').toLowerCase()
@@ -265,63 +272,100 @@ function App() {
 
   if (screen === 'map') {
     const currentZone = puzzle.zone
-    const currentZoneIndex = zones.indexOf(currentZone)
+    const isZoneCompleted = (zone) => {
+      const completeThresholdByZone = {
+        'Zone A: 吉田観賞魚': 2,
+        'Zone B: GGガーデンズ': 4,
+        'Zone C: Gardens Marché': 6,
+        'Zone D: Au coju': 8,
+        '最終地点: 水の丘': 9,
+      }
+
+      const threshold = completeThresholdByZone[zone]
+      return typeof threshold === 'number' && currentIndex >= threshold
+    }
 
     return (
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,#f8edd2,#ead7ad_40%,#d0b98a)] p-6 text-amber-950">
-        <section className="mx-auto w-full max-w-4xl rounded-3xl border-2 border-amber-900/30 bg-amber-50/80 p-6 shadow-xl md:p-10">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <h1 className="flex items-center gap-2 text-3xl font-bold md:text-4xl">
-              <Map className="h-7 w-7" /> 水の丘の探索地図
-            </h1>
-            <p className="rounded-full border border-amber-900/20 bg-white/70 px-4 py-1 text-sm font-semibold">
-              進行度: {currentIndex + 1} / 10
-            </p>
+      <main className="relative min-h-screen overflow-hidden text-amber-950">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/bg-map.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'sepia(0.6) brightness(0.9)',
+          }}
+        />
+        <div className="absolute inset-0 bg-black/25" />
+
+        <div className="relative z-10 flex min-h-screen flex-col">
+          <section className="bg-black/50 p-4 text-white backdrop-blur-sm">
+            <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3">
+              <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
+                <Map className="h-7 w-7" /> 水の丘の探索地図
+              </h1>
+              <p className="rounded-full border border-white/30 bg-black/30 px-4 py-1 text-sm font-semibold">
+                プレイヤー: {playerName} / 進行度: {currentIndex + 1} / 10
+              </p>
+            </div>
+          </section>
+
+          <section className="bg-black/30 p-4 text-center text-white">
+            <p className="text-sm font-semibold text-amber-100">次の目的地</p>
+            <h2 className="mt-1 text-3xl font-extrabold md:text-4xl">{puzzle.zone}</h2>
+          </section>
+
+          <div className="relative mx-auto w-full max-w-5xl flex-1 p-4">
+            <div className="relative min-h-[420px] rounded-2xl border border-amber-100/50 bg-black/10">
+              {zones
+                .filter((zone) => ZONE_COORDS[zone])
+                .map((zone) => {
+                  const isCurrent = zone === currentZone
+                  const isCompleted = !isCurrent && isZoneCompleted(zone)
+                  const coords = ZONE_COORDS[zone]
+
+                  return (
+                    <div
+                      key={zone}
+                      className="absolute -translate-x-1/2 -translate-y-1/2 text-center"
+                      style={{ top: coords.top, left: coords.left }}
+                    >
+                      {isCurrent ? (
+                        <div className="animate-bounce">
+                          <MapPin className="mx-auto h-9 w-9 text-red-500 drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]" />
+                          <p className="mt-1 rounded bg-white/80 px-2 py-1 text-xs font-bold text-red-700 md:text-sm">
+                            {zone}
+                          </p>
+                        </div>
+                      ) : (
+                        <div className={`opacity-90 ${isCompleted ? 'text-emerald-200' : 'text-gray-300'}`}>
+                          <p className="text-lg">{isCompleted ? '✅' : '•'}</p>
+                          <p className="rounded bg-black/35 px-2 py-1 text-[11px] font-semibold md:text-xs">
+                            {zone}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+            </div>
           </div>
 
-          <div className="mb-6 rounded-2xl border-2 border-amber-900/30 bg-amber-100/80 p-5 shadow">
-            <p className="text-sm font-semibold text-amber-900/80">次の目的地</p>
-            <p className="mt-2 text-3xl font-extrabold md:text-4xl">{puzzle.zone}</p>
-          </div>
-
-          <div className="mb-6 grid gap-3 md:grid-cols-2">
-            {zones.map((zone, index) => (
-              <article
-                key={zone}
-                className={`rounded-xl border p-4 ${
-                  index < currentZoneIndex
-                    ? 'border-emerald-700/30 bg-emerald-100/80'
-                    : index === currentZoneIndex
-                      ? 'border-amber-900/40 bg-yellow-100/90'
-                      : 'border-amber-900/10 bg-white/40 opacity-60'
-                }`}
+          <div className="mt-auto bg-black/55 p-4 backdrop-blur-sm">
+            <div className="mx-auto w-full max-w-5xl">
+              <p className="mb-3 flex items-center gap-2 text-sm text-white/90">
+                <CheckCircle className="h-4 w-4" />
+                プレイヤー「{playerName}」で認証済み。ログ回収を開始してください。
+              </p>
+              <button
+                onClick={() => setScreen('play')}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-6 py-4 text-xl font-bold text-white hover:from-red-700 hover:to-red-800"
               >
-                <p className="mb-2 flex items-center gap-2 text-sm font-semibold">
-                  <Compass className="h-4 w-4" />
-                  SPOT {index + 1}
-                </p>
-                <h2 className="flex items-center gap-2 text-xl font-bold">
-                  <MapPin className="h-5 w-5" /> {zone}
-                </h2>
-                <p className="mt-2 text-sm font-semibold">
-                  {index < currentZoneIndex ? '✅ 完了' : index === currentZoneIndex ? '🔴 現在地' : '未到達'}
-                </p>
-              </article>
-            ))}
+                🎯 現地に到着した（謎を解く） <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
-
-          <p className="mb-6 flex items-center gap-2 text-sm">
-            <CheckCircle className="h-4 w-4" />
-            プレイヤー「{playerName}」で認証済み。ログ回収を開始してください。
-          </p>
-
-          <button
-            onClick={() => setScreen('play')}
-            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-900 px-6 py-4 text-lg font-bold text-amber-50 hover:bg-amber-800"
-          >
-            現地に到着した（謎を解く） <ChevronRight className="h-5 w-5" />
-          </button>
-        </section>
+        </div>
       </main>
     )
   }
