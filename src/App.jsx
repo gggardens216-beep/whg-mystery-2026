@@ -3,10 +3,8 @@ import {
   Map,
   ChevronRight,
   HelpCircle,
-  Heart,
   PhoneIncoming,
   PhoneOff,
-  Image,
   Clock,
   MapPin,
   CheckCircle,
@@ -412,19 +410,26 @@ function App() {
             Water Hill Garden の未来を守る鍵になった。
           </p>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <article className="rounded-2xl border border-slate-600 bg-slate-800/80 p-4">
-              <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold">
-                <Image className="h-5 w-5" /> クリア特典1
-              </h2>
-              <p>デジタル写真フレーム: WHG-2046-LENS</p>
-            </article>
-            <article className="rounded-2xl border border-slate-600 bg-slate-800/80 p-4">
-              <h2 className="mb-2 flex items-center gap-2 text-lg font-semibold">
-                <Heart className="h-5 w-5 text-rose-400" /> クリア特典2
-              </h2>
-              <p>引換コード: MIZU-NO-OKA-2046</p>
-            </article>
+          <div className="mt-8 overflow-hidden rounded-xl bg-gradient-to-br from-[#8d6e63] to-[#5d4037] p-6 text-[#fdf8e7] shadow-inner">
+            <p className="mb-2 text-xs uppercase tracking-widest opacity-80">Clear Reward</p>
+            <div className="mb-4 rounded border border-white/20 bg-white/10 p-4 text-left">
+              <p className="mb-3 text-center text-sm font-bold">選べるクリア特典 🎉</p>
+              <ul className="space-y-2 text-xs">
+                <li className="flex items-center gap-2">
+                  <span>🐟</span> 吉田観賞魚：金魚すくい無料券
+                </li>
+                <li className="flex items-center gap-2">
+                  <span>☕</span> Au coju：ドリンク引換券
+                </li>
+                <li className="flex items-center gap-2">
+                  <span>🌿</span> GGガーデンズ：特製ノベルティプレゼント
+                </li>
+              </ul>
+            </div>
+            <p className="mb-2 text-center font-mono text-3xl font-bold tracking-widest">WHG-2026-CLR</p>
+            <p className="text-center text-[10px] opacity-70">
+              ※いずれかの店舗のスタッフにこの画面を提示してください（お一人様1回限り有効）
+            </p>
           </div>
         </section>
       </main>
