@@ -352,9 +352,9 @@ function App() {
                           </p>
                         </div>
                       ) : (
-                        <div className={`text-xs font-semibold ${isCompleted ? 'text-green-600 opacity-70' : 'text-gray-400 opacity-50'}`}>
+                        <div className={`text-xs font-semibold ${isCompleted ? 'text-green-300 opacity-70' : 'text-gray-300 opacity-50'}`}>
                           <p className="text-lg">{isCompleted ? '✅' : '•'}</p>
-                          <p className="rounded bg-white/70 px-2 py-1 text-[11px] md:text-xs">
+                          <p className="rounded bg-black/45 px-2 py-1 text-[11px] md:text-xs">
                             {zone}
                           </p>
                         </div>
