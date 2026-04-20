@@ -293,7 +293,7 @@ function App() {
       <main
         className="relative min-h-screen w-full overflow-hidden text-amber-950"
         style={{
-          backgroundImage: `url('${mapBackgroundUrl}')`,
+          backgroundImage: `url(${mapBackgroundUrl})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
