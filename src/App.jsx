@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import {
-  Camera,
   Map,
   ChevronRight,
   HelpCircle,
@@ -115,7 +114,7 @@ const puzzles = [
 const zones = ['吉田観賞魚', 'GGガーデンズ', 'マルシェ', 'Au coju', '最終地点']
 const DECLINE_MESSAGE = '通信を終了すると特典を受け取れません。'
 
-const normalize = (value) => value.trim().toLowerCase()
+const normalize = (value) => value.normalize('NFKC').trim().replace(/\s+/g, '').toLowerCase()
 
 function App() {
   const [screen, setScreen] = useState('prologue')
@@ -126,62 +125,8 @@ function App() {
   const [answerInput, setAnswerInput] = useState('')
   const [showHint, setShowHint] = useState(false)
   const [feedback, setFeedback] = useState('')
-  const [scannerError, setScannerError] = useState('')
-
-  const videoRef = useRef(null)
-  const streamRef = useRef(null)
 
   const puzzle = puzzles[currentIndex]
-
-  useEffect(() => {
-    if (screen !== 'ar') {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop())
-        streamRef.current = null
-      }
-      return
-    }
-
-    let cancelled = false
-
-    navigator.mediaDevices
-      .getUserMedia({
-        video: {
-          facingMode: { ideal: 'environment' },
-        },
-        audio: false,
-      })
-      .then((stream) => {
-        if (cancelled) {
-          stream.getTracks().forEach((track) => track.stop())
-          return
-        }
-        streamRef.current = stream
-        setScannerError('')
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-        }
-      })
-      .catch((error) => {
-        if (error?.name === 'NotAllowedError') {
-          setScannerError('カメラ権限が拒否されました。ブラウザ設定から許可して再試行してください。')
-          return
-        }
-        if (error?.name === 'NotFoundError') {
-          setScannerError('利用可能なカメラが見つかりませんでした。別の端末でお試しください。')
-          return
-        }
-        setScannerError('カメラへアクセスできませんでした。権限と端末状態を確認して再試行してください。')
-      })
-
-    return () => {
-      cancelled = true
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop())
-        streamRef.current = null
-      }
-    }
-  }, [screen])
 
   const nextPrologue = () => {
     if (prologueStep < 2) {
@@ -216,6 +161,7 @@ function App() {
       }
 
       setCurrentIndex((prev) => prev + 1)
+      setScreen('map')
       return
     }
 
@@ -303,6 +249,9 @@ function App() {
   }
 
   if (screen === 'map') {
+    const currentZone = puzzle.zone
+    const currentZoneIndex = zones.indexOf(currentZone)
+
     return (
       <main className="min-h-screen bg-[radial-gradient(circle_at_top,#f8edd2,#ead7ad_40%,#d0b98a)] p-6 text-amber-950">
         <section className="mx-auto w-full max-w-4xl rounded-3xl border-2 border-amber-900/30 bg-amber-50/80 p-6 shadow-xl md:p-10">
@@ -315,9 +264,23 @@ function App() {
             </p>
           </div>
 
+          <div className="mb-6 rounded-2xl border-2 border-amber-900/30 bg-amber-100/80 p-5 shadow">
+            <p className="text-sm font-semibold text-amber-900/80">次の目的地</p>
+            <p className="mt-2 text-3xl font-extrabold md:text-4xl">{puzzle.zone}</p>
+          </div>
+
           <div className="mb-6 grid gap-3 md:grid-cols-2">
             {zones.map((zone, index) => (
-              <article key={zone} className="rounded-xl border border-amber-900/20 bg-white/60 p-4">
+              <article
+                key={zone}
+                className={`rounded-xl border p-4 ${
+                  index < currentZoneIndex
+                    ? 'border-emerald-700/30 bg-emerald-100/80'
+                    : index === currentZoneIndex
+                      ? 'border-amber-900/40 bg-yellow-100/90'
+                      : 'border-amber-900/10 bg-white/40 opacity-60'
+                }`}
+              >
                 <p className="mb-2 flex items-center gap-2 text-sm font-semibold">
                   <Compass className="h-4 w-4" />
                   SPOT {index + 1}
@@ -325,6 +288,9 @@ function App() {
                 <h2 className="flex items-center gap-2 text-xl font-bold">
                   <MapPin className="h-5 w-5" /> {zone}
                 </h2>
+                <p className="mt-2 text-sm font-semibold">
+                  {index < currentZoneIndex ? '✅ 完了' : index === currentZoneIndex ? '🔴 現在地' : '未到達'}
+                </p>
               </article>
             ))}
           </div>
@@ -336,37 +302,11 @@ function App() {
 
           <button
             onClick={() => setScreen('play')}
-            className="inline-flex items-center gap-2 rounded-xl bg-amber-900 px-5 py-3 font-semibold text-amber-50 hover:bg-amber-800"
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-900 px-6 py-4 text-lg font-bold text-amber-50 hover:bg-amber-800"
           >
-            最初の謎へ進む <ChevronRight className="h-4 w-4" />
+            現地に到着した（謎を解く） <ChevronRight className="h-5 w-5" />
           </button>
         </section>
-      </main>
-    )
-  }
-
-  if (screen === 'ar') {
-    return (
-      <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black text-white">
-        <video ref={videoRef} autoPlay playsInline muted className="absolute inset-0 h-full w-full object-cover opacity-80" />
-
-        <div className="relative z-10 flex h-64 w-64 items-center justify-center rounded-full border-4 border-emerald-300/80 shadow-[0_0_30px_rgba(52,211,153,0.7)]">
-          <div className="absolute inset-4 rounded-full border border-emerald-200/70" />
-          <span className="text-6xl">☘️</span>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 z-10 w-[90%] max-w-md -translate-x-1/2 rounded-xl bg-black/70 p-4">
-          <p className="mb-3 flex items-center gap-2 text-sm text-emerald-200">
-            <Camera className="h-4 w-4" /> ARスキャナー起動中（背面カメラ）
-          </p>
-          {scannerError && <p className="mb-3 text-sm text-rose-300">{scannerError}</p>}
-          <button
-            onClick={() => setScreen('play')}
-            className="w-full rounded-lg bg-emerald-500 px-4 py-2 font-semibold text-black hover:bg-emerald-400"
-          >
-            謎解きに戻る
-          </button>
-        </div>
       </main>
     )
   }
@@ -432,7 +372,8 @@ function App() {
     )
   }
 
-  return (
+  if (screen === 'play') {
+    return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,#f8edd2,#ead7ad_40%,#d0b98a)] p-6 text-amber-950">
       <section className={`mx-auto w-full max-w-4xl rounded-3xl border-2 border-amber-900/30 bg-gradient-to-br ${puzzle.color} p-6 shadow-xl md:p-10`}>
         <div className="mb-5 flex items-center justify-between gap-3">
@@ -466,13 +407,6 @@ function App() {
             >
               <HelpCircle className="h-4 w-4" /> ヒント
             </button>
-            <button
-              type="button"
-              onClick={() => setScreen('ar')}
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-800/30 bg-emerald-100 px-4 py-2 font-semibold"
-            >
-              <Camera className="h-4 w-4" /> ARスキャナー
-            </button>
           </div>
         </form>
 
@@ -487,7 +421,10 @@ function App() {
         )}
       </section>
     </main>
-  )
+    )
+  }
+
+  return null
 }
 
 export default App
