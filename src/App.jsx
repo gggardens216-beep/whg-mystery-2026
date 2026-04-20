@@ -281,7 +281,7 @@ function App() {
         'Zone B: GGガーデンズ': 4,
         'Zone C: Gardens Marché': 6,
         'Zone D: Au coju': 8,
-        '最終地点: 水の丘': 10,
+        '最終地点: 水の丘': 9,
       }
 
       const threshold = completeThresholdByZone[zone]
