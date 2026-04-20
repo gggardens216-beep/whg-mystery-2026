@@ -290,12 +290,7 @@ function App() {
       <main
         className="relative min-h-screen w-full overflow-hidden text-amber-950"
         style={{
-          backgroundImage: 'none',
           backgroundColor: '#0b1214',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
         }}
       >
         <div
