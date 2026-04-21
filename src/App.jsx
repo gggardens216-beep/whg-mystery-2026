@@ -124,16 +124,16 @@ const zones = [
   '最終地点: 水の丘',
 ]
 const ZONE_COORDS = {
-  'Zone A: 吉田観賞魚': { top: '30%', left: '25%' },
-  'Zone B: GGガーデンズ': { top: '20%', left: '65%' },
-  'Zone C: Gardens Marché': { top: '70%', left: '70%' },
-  'Zone D: Au coju': { top: '70%', left: '25%' },
+  'Zone A: 吉田観賞魚': { top: '40%', left: '40%' },
+  'Zone B: GGガーデンズ': { top: '35%', left: '60%' },
+  'Zone C: Gardens Marché': { top: '65%', left: '70%' },
+  'Zone D: Au coju': { top: '65%', left: '35%' },
   '最終地点: 水の丘': { top: '50%', left: '50%' },
 }
 const ENTRANCE_COORDS = [
-  { top: '10%', left: '22%' },
-  { top: '10%', left: '50%' },
-  { top: '10%', left: '78%' },
+  { top: '15%', left: '55%' },
+  { top: '75%', left: '15%' },
+  { top: '70%', left: '85%' },
 ]
 const DECLINE_MESSAGE = '通信を終了すると特典を受け取れません。'
 
