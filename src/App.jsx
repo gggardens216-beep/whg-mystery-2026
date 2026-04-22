@@ -1,4 +1,7 @@
-  <ul>
-    {/* Existing content... */}
-  </ul>
-<a href="https://lin.ee/sIbQlIJ" target="_blank" rel="noopener noreferrer" className="mt-6 block w-full py-4 px-6 bg-[#06C755] text-white rounded-xl font-bold text-center shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">🎁 クリア報酬をうけとる</a>
+const ZONE_COORDS = {
+  'Zone A: 吉田観賞魚': { top: '28%', left: '38%' },
+  'Zone B: GGガーデンズ': { top: '32%', left: '62%' },
+  'Zone C: Gardens Marché': { top: '58%', left: '68%' },
+  'Zone D: Au coju': { top: '62%', left: '42%' },
+  '最終地点: 水の丘': { top: '45%', left: '50%' },
+};
