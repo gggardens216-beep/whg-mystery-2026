@@ -288,31 +288,14 @@ function App() {
     }
 
     return (
-      <main
-        className="relative min-h-screen w-full overflow-hidden text-amber-950"
-        style={{
-          backgroundImage: `url('${mapBackgroundUrl}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-        }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
-            mixBlendMode: 'multiply',
-          }}
-        />
-
-        <div className="relative z-10 flex min-h-screen flex-col">
-          <section className="bg-black/50 p-4 text-white backdrop-blur-sm">
+      <main className="h-[100dvh] w-full overflow-hidden text-amber-950">
+        <div className="flex h-full flex-col bg-black">
+          <section className="shrink-0 bg-black/50 px-4 py-2 text-white backdrop-blur-sm">
             <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3">
-              <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
+              <h1 className="flex items-center gap-2 text-xl font-bold md:text-3xl">
                 <Map className="h-7 w-7" /> Water Hill Garden
               </h1>
-              <p className="rounded-full border border-white/30 bg-black/30 px-4 py-1 text-sm font-semibold leading-relaxed">
+              <p className="rounded-full border border-white/30 bg-black/30 px-4 py-1 text-xs font-semibold leading-relaxed md:text-sm">
                 プレイヤー: {playerName}
                 <br />
                 進行度: {currentIndex + 1} / 10
@@ -320,18 +303,20 @@ function App() {
             </div>
           </section>
 
-          <section className="bg-black/30 p-4 text-center text-white">
+          <section className="shrink-0 bg-black/30 px-4 py-2 text-center text-white">
             <p className="text-sm font-semibold text-amber-100">次の目的地</p>
-            <h2 className="mt-1 text-3xl font-extrabold md:text-4xl">{puzzle.zone}</h2>
-            <p className="mt-1 text-xs text-amber-100/90">問題 {puzzle.id} / 10</p>
+            <h2 className="text-2xl font-extrabold md:text-4xl">{puzzle.zone}</h2>
+            <p className="text-xs text-amber-100/90">問題 {puzzle.id} / 10</p>
           </section>
 
-          <div className="relative mx-auto w-full max-w-5xl flex-1 p-4">
-            <div className="relative min-h-[420px] rounded-2xl border border-amber-100/50 bg-black/10">
+          <div className="relative mx-auto flex w-full max-w-5xl flex-1 min-h-0 p-3">
+            <div className="relative w-full overflow-hidden rounded-2xl border border-amber-100/50 bg-black/10">
+              <img src={mapBackgroundUrl} alt="Water Hill Gardenの施設マップ（ゾーン位置表示）" className="absolute inset-0 h-full w-full object-contain" />
+              <div className="absolute inset-0 bg-black/10" />
               {ENTRANCE_COORDS.map((coords, index) => (
                 <div
                   key={`entrance-${index}`}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 rounded bg-black/45 px-2 py-1 text-[10px] font-bold tracking-wide text-white/90 md:text-xs"
+                  className="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded bg-black/45 px-2 py-1 text-[10px] font-bold tracking-wide text-white/90 md:text-xs"
                   style={{ top: coords.top, left: coords.left }}
                 >
                   ENTRANCE
@@ -347,7 +332,7 @@ function App() {
                   return (
                     <div
                       key={zone}
-                      className="absolute -translate-x-1/2 -translate-y-1/2 text-center"
+                      className="absolute z-10 -translate-x-1/2 -translate-y-1/2 text-center"
                       style={{ top: coords.top, left: coords.left }}
                     >
                       {isCurrent ? (
@@ -371,7 +356,7 @@ function App() {
             </div>
           </div>
 
-          <div className="sticky bottom-0 mt-auto bg-black/55 p-4 backdrop-blur-sm">
+          <div className="shrink-0 bg-black/55 p-4 backdrop-blur-sm">
             <div className="mx-auto w-full max-w-5xl">
               <p className="mb-3 flex items-center gap-2 text-sm text-white/90">
                 <CheckCircle className="h-4 w-4" />
