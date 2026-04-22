@@ -306,7 +306,7 @@ function App() {
           }}
         />
 
-        <div className="relative z-10 flex h-full min-h-0 flex-1 flex-col">
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col">
           <section className="bg-black/50 px-4 py-2 text-white backdrop-blur-sm">
             <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-2">
               <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
@@ -327,7 +327,7 @@ function App() {
           </section>
 
           <div className="relative mx-auto w-full max-w-5xl flex-1 min-h-0 px-4 py-2">
-            <div className="relative h-full min-h-0 rounded-2xl border border-amber-100/50 bg-black/10">
+            <div className="relative h-full rounded-2xl border border-amber-100/50 bg-black/10">
               {ENTRANCE_COORDS.map((coords, index) => (
                 <div
                   key={`entrance-${index}`}
