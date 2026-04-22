@@ -311,7 +311,7 @@ function App() {
 
           <div className="relative mx-auto flex w-full max-w-5xl flex-1 min-h-0 p-3">
             <div className="relative w-full overflow-hidden rounded-2xl border border-amber-100/50 bg-black/10">
-              <img src={mapBackgroundUrl} alt="施設マップ" className="absolute inset-0 h-full w-full object-contain" />
+              <img src={mapBackgroundUrl} alt="Water Hill Gardenの施設マップ（ゾーン位置表示）" className="absolute inset-0 h-full w-full object-contain" />
               <div className="absolute inset-0 bg-black/10" />
               {ENTRANCE_COORDS.map((coords, index) => (
                 <div
