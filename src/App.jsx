@@ -289,13 +289,13 @@ function App() {
 
     return (
       <main
-        className="relative min-h-screen w-full overflow-hidden text-amber-950"
+        className="relative h-[100dvh] w-full flex flex-col overflow-hidden text-amber-950"
         style={{
           backgroundImage: `url('${mapBackgroundUrl}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
+          backgroundAttachment: 'scroll',
         }}
       >
         <div
@@ -306,9 +306,9 @@ function App() {
           }}
         />
 
-        <div className="relative z-10 flex min-h-screen flex-col">
-          <section className="bg-black/50 p-4 text-white backdrop-blur-sm">
-            <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3">
+        <div className="relative z-10 flex h-full min-h-0 flex-1 flex-col">
+          <section className="bg-black/50 px-4 py-2 text-white backdrop-blur-sm">
+            <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-2">
               <h1 className="flex items-center gap-2 text-2xl font-bold md:text-3xl">
                 <Map className="h-7 w-7" /> Water Hill Garden
               </h1>
@@ -320,14 +320,14 @@ function App() {
             </div>
           </section>
 
-          <section className="bg-black/30 p-4 text-center text-white">
+          <section className="bg-black/30 px-4 py-2 text-center text-white">
             <p className="text-sm font-semibold text-amber-100">次の目的地</p>
-            <h2 className="mt-1 text-3xl font-extrabold md:text-4xl">{puzzle.zone}</h2>
-            <p className="mt-1 text-xs text-amber-100/90">問題 {puzzle.id} / 10</p>
+            <h2 className="mt-0.5 text-3xl font-extrabold md:text-4xl">{puzzle.zone}</h2>
+            <p className="mt-0.5 text-xs text-amber-100/90">問題 {puzzle.id} / 10</p>
           </section>
 
-          <div className="relative mx-auto w-full max-w-5xl flex-1 p-4">
-            <div className="relative min-h-[420px] rounded-2xl border border-amber-100/50 bg-black/10">
+          <div className="relative mx-auto w-full max-w-5xl flex-1 min-h-0 px-4 py-2">
+            <div className="relative h-full min-h-0 rounded-2xl border border-amber-100/50 bg-black/10">
               {ENTRANCE_COORDS.map((coords, index) => (
                 <div
                   key={`entrance-${index}`}
@@ -371,7 +371,7 @@ function App() {
             </div>
           </div>
 
-          <div className="sticky bottom-0 mt-auto bg-black/55 p-4 backdrop-blur-sm">
+          <div className="shrink-0 bg-black/55 p-4 backdrop-blur-sm">
             <div className="mx-auto w-full max-w-5xl">
               <p className="mb-3 flex items-center gap-2 text-sm text-white/90">
                 <CheckCircle className="h-4 w-4" />
